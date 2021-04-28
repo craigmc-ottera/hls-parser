@@ -300,9 +300,11 @@ function buildSegment(lines, segment, lastKey, lastMap, version = 1) {
   if (hint) {
     return [lastKey, lastMap];
   }
-  const duration = version < 3 ? Math.round(segment.duration) : buildDecimalFloatingNumber(segment.duration, getNumberOfDecimalPlaces(segment.duration));
-  lines.push(`#EXTINF:${duration},${unescape(encodeURIComponent(segment.title || ''))}`);
-  Array.prototype.push.call(lines, `${segment.uri}`); // URIs could be redundant when EXT-X-BYTERANGE is used
+  if (segment.duration) {
+    const duration = version < 3 ? Math.round(segment.duration) : buildDecimalFloatingNumber(segment.duration, getNumberOfDecimalPlaces(segment.duration));
+    lines.push(`#EXTINF:${duration},${unescape(encodeURIComponent(segment.title || ''))}`);
+    Array.prototype.push.call(lines, `${segment.uri}`); // URIs could be redundant when EXT-X-BYTERANGE is used
+  }
   if (segment.cueIn) {
     lines.push(`#EXT-X-CUE-IN`)
   }
